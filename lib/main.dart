@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_google_maps_app/google_map.dart';
+import 'package:flutter_google_maps_app/google_maps_demo/google_map_flutter.dart';
+import 'package:flutter_google_maps_app/google_maps_demo/google_maps_demo.dart';
+import 'package:flutter_google_maps_app/js_handle/iframe_js_callback_demo.dart';
+import 'package:flutter_google_maps_app/js_handle/iframe_js_handle_demo2.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
@@ -39,7 +42,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,8 +55,15 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             /*if(kIsWeb)
               Flexible(child: ShowHtmlElementView()),*/
+            /*if(kIsWeb)
+              Flexible(child: GoogleMapsFlutter()),*/
+            // Flexible(child: GoogleMapsDemo()),
+
+            // AS - TODO: navigator
             if(kIsWeb)
-              Flexible(child: GoogleMapDemo()),
+              Flexible(child: IFrameJsCallBackDemo()),
+            if(kIsWeb)
+              Flexible(child: IframeJsHandleDemo2()),
           ],
         ),
       ),

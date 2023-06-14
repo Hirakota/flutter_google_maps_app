@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <script>
+        parent.flutter_connector && parent.flutter_connector(window);
+
+        let mapElem = document.getElementById('map');
+
+        parent.flutter_document && parent.flutter_document(mapElem);
+        function addAdvancedMarker() {
+
+        }
+    </script>
+</body>
+</html>
