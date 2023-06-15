@@ -204,8 +204,8 @@ class _IframeJsHandleDemo2State extends State<IframeJsHandleDemo2> {
       body: Container(
         child: Column(
           children: [
-            // Flexible(child: HtmlElementView(viewType: 'example')),
-            // Flexible(child: HtmlElementView(viewType: 'divElement')),
+            Flexible(child: HtmlElementView(viewType: 'example')),
+            Flexible(child: HtmlElementView(viewType: 'divElement')),
             Flexible(child: HtmlElementView(viewType: 'formElement')),
           ],
         ),
