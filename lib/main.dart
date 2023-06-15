@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_google_maps_app/google_maps_demo/google_map_flutter.dart';
 import 'package:flutter_google_maps_app/google_maps_demo/google_maps_demo.dart';
+import 'package:flutter_google_maps_app/google_maps_demo/google_maps_js.dart';
 import 'package:flutter_google_maps_app/js_handle/iframe_js_callback_demo.dart';
 import 'package:flutter_google_maps_app/js_handle/iframe_js_handle_demo2.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+
+import 'ShowHtmlElementView.dart';
 
 
 void main() {
@@ -53,15 +56,19 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            // AS - TODO: navigator
+
             /*if(kIsWeb)
               Flexible(child: ShowHtmlElementView()),*/
+
+
             /*if(kIsWeb)
               Flexible(child: GoogleMapsFlutter()),*/
             // Flexible(child: GoogleMapsDemo()),
+            // Flexible(child: GoogleMapsJsDemo()),
 
-            // AS - TODO: navigator
-            if(kIsWeb)
-              Flexible(child: IFrameJsCallBackDemo()),
+            /*if(kIsWeb)
+              Flexible(child: IFrameJsCallBackDemo()),*/
             if(kIsWeb)
               Flexible(child: IframeJsHandleDemo2()),
           ],

@@ -55,7 +55,7 @@ class _GoogleMapsDemoState extends State<GoogleMapsDemo> {
     final map = gMap.GMap(el as html.HtmlElement, mapOptions);
   }
 
-  /*Widget _map() {
+  Widget _map() {
     final String htmlId = "map";
 
     // ignore: undefined_prefixed_name
@@ -64,7 +64,7 @@ class _GoogleMapsDemoState extends State<GoogleMapsDemo> {
         ..zoom = 15.0
         ..center = gMap.LatLng(35.7560423, 139.7803552);
 
-      final elem = DivElement()..id = htmlId;
+      final elem = html.DivElement()..id = htmlId;
 
 
 
@@ -75,10 +75,10 @@ class _GoogleMapsDemoState extends State<GoogleMapsDemo> {
       return elem;
     });
     return HtmlElementView(viewType: htmlId);
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
-    return HtmlElementView(viewType: 'gMap-html');
+    return _map();
   }
 }
