@@ -10,7 +10,6 @@ import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platf
 
 import 'ShowHtmlElementView.dart';
 
-
 void main() {
   final GoogleMapsFlutterPlatform mapsImplementation =
       GoogleMapsFlutterPlatform.instance;
@@ -58,19 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             // AS - TODO: navigator
 
-            /*if(kIsWeb)
-              Flexible(child: ShowHtmlElementView()),*/
+            // Flexible(child: ShowHtmlElementView()),
 
-
-            /*if(kIsWeb)
-              Flexible(child: GoogleMapsFlutter()),*/
+            // Flexible(child: GoogleMapsFlutter()),
             // Flexible(child: GoogleMapsDemo()),
-            // Flexible(child: GoogleMapsJsDemo()),
+            Flexible(child: GoogleMapsJsDemo()),
 
-            /*if(kIsWeb)
-              Flexible(child: IFrameJsCallBackDemo()),*/
-            if(kIsWeb)
-              Flexible(child: IframeJsHandleDemo2()),
+            // Flexible(child: IFrameJsCallBackDemo()),
+            // Flexible(child: IframeJsHandleDemo2()),
           ],
         ),
       ),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps/google_maps.dart' as gMap;
 
 import 'dart:html' as html;
 import 'dart:ui' as ui;
-import 'dart:js' as js;
 
 class GoogleMapsJsDemo extends StatefulWidget {
   const GoogleMapsJsDemo({Key? key}) : super(key: key);
@@ -16,11 +14,14 @@ class _GoogleMapsJsDemoState extends State<GoogleMapsJsDemo> {
   late html.DivElement _mapContainer;
   late html.DivElement _mapElement;
 
+  late html.IFrameElement _mapIFrameElement;
+
   @override
   void initState() {
     super.initState();
 
     _registerMapElement();
+    _registerIFrameMapElement();
   }
 
   void _registerMapElement() {
@@ -28,30 +29,90 @@ class _GoogleMapsJsDemoState extends State<GoogleMapsJsDemo> {
       ..id = 'map-container'
       ..style.height = "100%"
       ..style.width = "100%";
-    _mapElement = html.DivElement()..id = "map";
+
+    _mapElement = html.DivElement()
+      ..id = "map"
+      ..style.height = "100%"
+      ..style.width = "100%";
 
     final mapScript = html.ScriptElement()
+      ..type = "text/javascript"
       ..text = '''
-      (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.\${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-        ({key: "AIzaSyBZiqh7kkI7-MQ6PLVGbaWvgq0TkdrA3kQ", v: "weekly"});
-      
       let map;
 
       async function initMap() {
+        // const { Map } = await google.maps.importLibrary("maps");
+        // const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
         
-        const { Map } = await google.maps.importLibrary("maps");
         
-        map = new Map(document.getElementById("map"), {
-          center: { lat: -34.397, lng: 150.644 },
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: -25.363, lng: 131.044 },
           zoom: 8,
+          mapId: "7d7a142fba8d398",
         });
         
+        console.log(map);
+        
+        
+        
+        /*new google.maps.Marker({
+          position: { lat: -25.363, lng: 131.044 },
+          map,
+          title: "Hello World!",
+        });*/
+        
+        const priceTag = document.createElement('div');
+        
+        priceTag.className = 'price-tag';
+        priceTag.textContent = '\$2.5M';
+      
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+            map,
+            position: { lat: -25.363, lng: 131.044 },
+            content: priceTag,
+          });
       }
       
-      initMap();
+      window.addEventListener('message', (event) => {
+        if(event.data == "initMap") {
+          initMap();
+        }
+      });
+            
+    ''';
+
+    final mapStyle = html.StyleElement()
+      ..text = '''
+      /* HTML marker styles */
+      .price-tag {
+        background-color: #4285F4;
+        border-radius: 8px;
+        color: #FFFFFF;
+        font-size: 14px;
+        padding: 10px 15px;
+        position: relative;
+      }
+      
+      .price-tag::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%, 0);
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid #4285F4;
+      }
     ''';
 
     _mapContainer.append(_mapElement);
+    _mapContainer.append(mapStyle);
+    _mapContainer.append(html.ScriptElement()
+      ..type = "text/javascript"
+      ..src =
+          "https://maps.googleapis.com/maps/api/js?key=[API_KEY]&callback=initMap&libraries=marker&v=beta");
     _mapContainer.append(mapScript);
 
 /*
@@ -67,13 +128,45 @@ class _GoogleMapsJsDemoState extends State<GoogleMapsJsDemo> {
     );
   }
 
+  void _registerIFrameMapElement() {
+    _mapIFrameElement = html.IFrameElement()
+      ..src = "/assets/templates/google_map.html"
+      ..style.width = "100%"
+      ..style.height = "100%";
+
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(
+      'map-iframe',
+      (int viewId) => _mapIFrameElement,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return HtmlElementView(
+    /*return HtmlElementView(
       viewType: 'map-container',
       onPlatformViewCreated: (_) {
-        // js.context.callMethod('initMap', []);
+        // html.window.postMessage('initMap', '*');
       },
+    );*/
+
+    return Column(
+      children: [
+        Expanded(child: HtmlElementView(viewType: 'map-iframe')),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: OutlinedButton(
+            onPressed: () {
+              _mapIFrameElement.contentWindow?.postMessage({
+                "action": "addMarker",
+                "text":
+                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in"
+              }, "*");
+            },
+            child: Text('Add marker'),
+          ),
+        ),
+      ],
     );
   }
 }

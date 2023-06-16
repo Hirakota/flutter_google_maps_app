@@ -1,21 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-</head>
-<body>
-    <div id="map"></div>
-    
-    <script>
-        parent.flutter_connector && parent.flutter_connector(window);
-
-        let mapElem = document.getElementById('map');
-
-        parent.flutter_document && parent.flutter_document(mapElem);
-        function addAdvancedMarker() {
-
+    <style>
+        .map-style {
+            position: unset !important;
+            width: 100%;
+            height: 100%;
         }
+
+        .marker {
+            display: grid;
+            grid-template-columns: 150px 200px;
+            grid-template-rows: 150px;
+            cursor: pointer;
+            background-color: #4285F4;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 14px;
+            padding: 10px 15px;
+            position: relative;
+        }
+
+        .marker::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            transform: translate(-50%, 0);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #4285F4;
+        }
+
+        .marker-image {
+            width: 100%;
+            height: 100%;
+        }
+
+        .marker-info {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map" class="map-style"></div>
+
+    <template id="marker-template">
+        <div class="marker">
+            <img class="marker-image" src="https://raw.githubusercontent.com/kylemsguy/jsteg-lib/master/cat.jpg" alt="Cat">
+                
+            <div class="marker-info"></div>
+        </div>
+    </template>
+
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=[API_KEY]&callback=initMap&libraries=marker&v=beta"
+        type="text/javascript" defer>
+        </script>
+    <script type="text/javascript">
+        let map;
+
+        async function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: -25.363, lng: 131.044 },
+                zoom: 8,
+                mapId: "7d7a142fba8d398",
+            });
+
+            // const priceTag = document.createElement('div');
+            // priceTag.className = 'price-tag';
+            // priceTag.textContent = '\$2.5M';
+
+            // const marker = new google.maps.marker.AdvancedMarkerElement({
+            //     map,
+            //     position: { lat: -25.363, lng: 131.044 },
+            //     content: priceTag,
+            // });
+        }
+
+        function addMarker(text) {
+            const markerElement = document.getElementById('marker-template').content.cloneNode(true);
+            markerElement.querySelector('.marker-info').textContent = text; 
+
+            const marker = new google.maps.marker.AdvancedMarkerElement({
+                map,
+                position: { lat: -25.361, lng: 131.042 },
+                content: markerElement,
+                title: 'someTitle',
+            });
+        }
+
+        window.addEventListener('message', (event) => {
+            let data = event.data;
+
+            switch (data['action']) {
+                case "addMarker":
+                    addMarker(data["text"]);
+                    break;
+                default:
+                    break;
+            }
+        });
     </script>
 </body>
+
 </html>
